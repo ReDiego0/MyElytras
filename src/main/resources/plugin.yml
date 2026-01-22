@@ -1,0 +1,4 @@
+name: MyElytras
+version: '1.0.0'
+main: org.ReDiego0.myElytras.MyElytras
+api-version: '1.20'
