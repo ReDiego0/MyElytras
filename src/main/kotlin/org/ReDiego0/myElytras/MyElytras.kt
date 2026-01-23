@@ -1,5 +1,6 @@
 package org.ReDiego0.myElytras
 
+import org.ReDiego0.myElytras.command.GiveCommand
 import org.ReDiego0.myElytras.config.ElytraConfigLoader
 import org.ReDiego0.myElytras.listener.ElytraMechanicListener
 import org.ReDiego0.myElytras.task.ElytraTask
@@ -16,6 +17,8 @@ class MyElytras : JavaPlugin() {
 
         server.pluginManager.registerEvents(ElytraMechanicListener(configLoader), this)
         ElytraTask(configLoader).runTaskTimer(this, 0L, 20L)
+
+        getCommand("myelytra")?.setExecutor(GiveCommand(configLoader))
 
         logger.info("MyElytras ha sido habilitado con éxito (≧◡≦) ♡")
     }

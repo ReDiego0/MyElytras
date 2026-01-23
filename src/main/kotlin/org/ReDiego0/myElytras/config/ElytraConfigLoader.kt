@@ -70,4 +70,6 @@ class ElytraConfigLoader(private val plugin: MyElytras) {
         val cmd = item.itemMeta.customModelData
         return elytraRegistry.values.find { it.customModelData == cmd }
     }
+
+    fun getElytraIds(): Set<String> = elytraRegistry.keys
 }

@@ -2,3 +2,8 @@ name: MyElytras
 version: '1.0.0'
 main: org.ReDiego0.myElytras.MyElytras
 api-version: '1.20'
+commands:
+  myelytra:
+    description: Comando principal para administrar elytras
+    permission: myelytras.admin
+    usage: /myelytra give <jugador> <id>

@@ -1,0 +1,37 @@
+# (´｡• ᵕ •｡`)
+debug-mode: false
+
+elytras:
+  phantom_wings: # Nombre interno que se utilizará en los comandos
+    display:
+      # MiniMessage para gradientes
+      name: "<gradient:#512b96:#9d4edd>Alas de Phantom Real</gradient>" # Nombre visible del item
+      lore: # Descripción del Item, si, hay mejores formas de integrar las estádisticas, no, no tengo ganas de hacerlo
+        - "<gray>Membranas extraídas de la bestia."
+        - ""
+        - "<dark_purple>Estadísticas:"
+        - " <white>✈ Vuelo: <green>Permitido"
+        - " <white>🛡 Protección: <green>+2"
+      # ID vinculado con el Resource Pack
+      custom-model-data: 1001
+
+    attributes:
+      armor: 2.0 # Cantidad de armadura que ofrece (Chestplate de diamante da 8.0)
+      toughness: 1.0 # Determina cuánto daño de ataques fuertes (como un hachazo de netherite) es bloqueado por la armadura. Diamante da 2.0 y Netherite 3.0
+      movement-speed: 0.0 # Velocidad al caminar con la elytra equipada, por defecto es 1.0
+
+    mechanics:
+      enabled: true # Si pones false, el ítem existe y se ve bonito, pero no sirve para volar ni da efectos. Solo es cosmético.
+      glide:
+        can-glide: true # Si se puede planear o no con la elytra
+        fall-speed-multiplier: 0.95 # Velocidad al caer, 1.0 es la caída normal, 0.5 es caída de pluma
+        max-distance-blocks: 20 # Límite de bloques que puedes recorrer volando antes de que las alas "se cansen" y te dejen caer.
+
+      flight:
+        can-boost: true # Si se pueden usar items para impulsarse, esencialmente es si puede volar o no
+        boost-speed-multiplier: 1.0 # Todavía no está implementado pero suena bien, no?
+
+    effects:
+      # Efectos (pociones) que se aplican al jugador cuando equipa la elytra
+      # La duración debe ser corta, ya que el plugin va renovando el efecto cada segundo (20 ticks = 1 segundo, 200 ticks = 10 segundos)
+      - "NIGHT_VISION;200;0;true" # tipo de efecto;duración en ticks;potencia;particulas del efecto visibles
