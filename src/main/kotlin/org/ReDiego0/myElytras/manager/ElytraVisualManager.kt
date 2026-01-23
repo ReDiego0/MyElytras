@@ -13,12 +13,11 @@ import org.joml.Vector3f
 import java.util.UUID
 
 class ElytraVisualManager(private val loader: ElytraConfigLoader) {
-
-    // Almacenar la entidad visual asociada al UUID del jugador
     private val activeDisplays = HashMap<UUID, ItemDisplay>()
 
     fun updateVisuals(player: Player, isGliding: Boolean) {
         val chestplate = player.inventory.chestplate
+
         val customElytra = if (chestplate != null) loader.getElytraFromItem(chestplate) else null
         if (customElytra == null) {
             removeVisual(player)
@@ -37,27 +36,29 @@ class ElytraVisualManager(private val loader: ElytraConfigLoader) {
             createDisplay(player)
         }
 
-        // Usamos el CustomModelData base para cerrado, y +1 para abierto.
-        // Ej: Cerrado=1001, Abierto=1002.
         val baseModelData = customElytra.customModelData
         val targetModelData = if (isGliding) baseModelData + 1 else baseModelData
 
-        val stack = ItemStack(Material.ELYTRA)
-        val meta = stack.itemMeta
-        // Solo actualizamos el ítem si cambió el estado para ahorrar procesamiento
         val currentStack = display.itemStack
         if (currentStack == null || currentStack.itemMeta?.customModelData != targetModelData) {
+            val stack = ItemStack(Material.ELYTRA)
+            val meta = stack.itemMeta
             meta.setCustomModelData(targetModelData)
             stack.itemMeta = meta
             display.setItemStack(stack)
         }
 
-        // Calcular la posición detrás de la espalda del jugador
         val targetLocation = calculateBackLocation(player)
 
-        // Teletrar y rotar para que coincida con el cuerpo del jugador
+        val targetYaw = player.location.yaw
+        val targetPitch = if (isGliding) {
+            player.location.pitch
+        } else {
+            0f
+        }
+
         display.teleport(targetLocation)
-        display.setRotation(player.location.yaw, 0f)
+        display.setRotation(targetYaw, targetPitch)
     }
 
     private fun createDisplay(player: Player): ItemDisplay {
@@ -67,13 +68,15 @@ class ElytraVisualManager(private val loader: ElytraConfigLoader) {
             d.viewRange = 1.0f // Visible a distancia normal
             d.brightness = Display.Brightness(15, 15) // Full brillo (opcional)
             d.isPersistent = false // No se guardan al reiniciar el server
+            d.teleportDuration = 1
 
-            // Transformación inicial (Escala y Ajustes finos)
+            val translation = Vector3f(0f, 0.3f, -0.15f)
+
             d.transformation = Transformation(
-                Vector3f(0f, 0f, 0f),       // Traslación local
-                AxisAngle4f(0f, 0f, 0f, 1f), // Rotación izquierda
-                Vector3f(1f, 1f, 1f),       // Escala (1.0 = tamaño normal)
-                AxisAngle4f(0f, 0f, 0f, 1f)  // Rotación derecha
+                translation,
+                AxisAngle4f(0f, 0f, 0f, 1f),
+                Vector3f(1f, 1f, 1f),
+                AxisAngle4f(0f, 0f, 0f, 1f)
             )
         }
         activeDisplays[player.uniqueId] = display

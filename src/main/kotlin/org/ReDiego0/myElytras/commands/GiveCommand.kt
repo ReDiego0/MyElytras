@@ -17,26 +17,25 @@ class GiveCommand(private val loader: ElytraConfigLoader) : CommandExecutor, Tab
             return true
         }
 
-        if (args.size < 2) {
-            sender.sendMessage(Component.text("Uso: /myelytra give <jugador> <id>", NamedTextColor.RED))
+        if (args.size < 3 || !args[0].equals("give", ignoreCase = true)) {
+            sender.sendMessage(Component.text("Uso correcto: /myelytra give <jugador> <id>", NamedTextColor.RED))
             return true
         }
 
-        val target = Bukkit.getPlayer(args[0])
+        val target = Bukkit.getPlayer(args[1])
         if (target == null) {
-            sender.sendMessage(Component.text("Jugador no encontrado.", NamedTextColor.RED))
+            sender.sendMessage(Component.text("Jugador '${args[1]}' no encontrado.", NamedTextColor.RED))
             return true
         }
 
-        val elytraId = args[1]
+        val elytraId = args[2]
         val elytra = loader.getElytra(elytraId)
 
         if (elytra == null) {
-            sender.sendMessage(Component.text("La elytra '$elytraId' no existe en la config.", NamedTextColor.RED))
+            sender.sendMessage(Component.text("La elytra '$elytraId' no existe en config.yml", NamedTextColor.RED))
             return true
         }
 
-        // Construir y dar el ítem
         target.inventory.addItem(elytra.buildItem())
 
         val successMsg = Component.text("¡Entregada ", NamedTextColor.GREEN)
@@ -49,9 +48,12 @@ class GiveCommand(private val loader: ElytraConfigLoader) : CommandExecutor, Tab
 
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): MutableList<String>? {
         if (args.size == 1) {
-            return null
+            return mutableListOf("give")
         }
         if (args.size == 2) {
+            return null
+        }
+        if (args.size == 3) {
             return loader.getElytraIds().toMutableList()
         }
         return mutableListOf()
